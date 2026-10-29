@@ -1,0 +1,44 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # No install step for dependencies: there are none. The package is
+      # installed only to exercise the console-script entry point.
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Run the test suite
+        run: python -m unittest discover -s tests -t . -v
+
+      - name: Verify the scaffolded manifest parses
+        run: |
+          fork-state-guard init /tmp/scaffolded.toml
+          python -c "from fork_state_guard.manifest import load_manifest; \
+            m = load_manifest('/tmp/scaffolded.toml'); \
+            print(f'scaffolded manifest parses: {m.check_count} checks')"
+
+      - name: Verify the example manifest parses
+        run: |
+          python -c "from fork_state_guard.manifest import load_manifest; \
+            m = load_manifest('examples/usdc-proxy.toml'); \
+            print(f'example manifest parses: {m.check_count} checks')"
+
+      - name: Print the derived proxy slots
+        run: fork-state-guard slots

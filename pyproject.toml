@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fork-state-guard"
+version = "0.1.0"
+description = "Verify that a smart-contract PoC's on-chain assumptions still hold against live chain state."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "David Nichols" }]
+keywords = [
+    "ethereum",
+    "security",
+    "smart-contracts",
+    "proof-of-concept",
+    "eip-1967",
+    "proxy",
+    "json-rpc",
+    "bug-bounty",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: Software Development :: Testing",
+]
+
+# No runtime dependencies, by design: keccak-256, ABI coding, EIP-55 and the
+# JSON-RPC client are implemented against the standard library alone
+# (tomllib and urllib ship with Python 3.11+).
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Young-Syre/fork-state-guard"
+Source = "https://github.com/Young-Syre/fork-state-guard"
+Issues = "https://github.com/Young-Syre/fork-state-guard/issues"
+
+[project.scripts]
+fork-state-guard = "fork_state_guard.cli:run"
+
+[tool.setuptools]
+packages = ["fork_state_guard"]
+
+[tool.setuptools.package-data]
+fork_state_guard = ["py.typed"]

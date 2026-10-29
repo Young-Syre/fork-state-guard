@@ -5,6 +5,12 @@ on:
     branches: [main]
   pull_request:
 
+# The workflow only reads the repository and runs the suite. Declaring it
+# means the token cannot write regardless of the repository default, which
+# is a setting rather than a property of this file.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
